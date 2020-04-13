@@ -7,7 +7,5 @@ import org.springframework.boot.test.context.SpringBootTest;
 class Spring5WebfluxRestApplicationTests {
 
     @Test
-    void contextLoads() {
-    }
-
+    void contextLoads() {}
 }

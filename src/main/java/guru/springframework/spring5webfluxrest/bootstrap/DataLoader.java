@@ -1,5 +1,7 @@
 package guru.springframework.spring5webfluxrest.bootstrap;
 
+import static java.util.Arrays.asList;
+
 import guru.springframework.spring5webfluxrest.domain.Category;
 import guru.springframework.spring5webfluxrest.domain.Vendor;
 import guru.springframework.spring5webfluxrest.repository.CategoryRepository;
@@ -7,8 +9,6 @@ import guru.springframework.spring5webfluxrest.repository.VendorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import static java.util.Arrays.asList;
 
 @Component
 @RequiredArgsConstructor
@@ -24,11 +24,8 @@ public class DataLoader implements CommandLineRunner {
 
     private void loadVendors() {
         if (vendorRepository.count().block() == 0) {
-            Vendor burgers = new Vendor();
-            burgers.setName("Bob's Burgers");
-
-            Vendor gyros = new Vendor();
-            gyros.setName("Tom & Jerry's");
+            Vendor burgers = Vendor.builder().name("Bob's Burgers").build();
+            Vendor gyros = Vendor.builder().name("Tom & Jerry's").build();
 
             vendorRepository.saveAll(asList(burgers, gyros)).blockLast();
         }
@@ -36,20 +33,11 @@ public class DataLoader implements CommandLineRunner {
 
     private void loadCategories() {
         if (categoryRepository.count().block() == 0) {
-            Category fruits = new Category();
-            fruits.setDescription("Fruits");
-
-            Category dried = new Category();
-            dried.setDescription("Dried");
-
-            Category fresh = new Category();
-            fresh.setDescription("Fresh");
-
-            Category exotic = new Category();
-            exotic.setDescription("Exotic");
-
-            Category nuts = new Category();
-            nuts.setDescription("Nuts");
+            Category fruits = Category.builder().description("Fruits").build();
+            Category dried = Category.builder().description("Dried").build();
+            Category fresh = Category.builder().description("Fresh").build();
+            Category exotic = Category.builder().description("Exotic").build();
+            Category nuts = Category.builder().description("Nuts").build();
 
             categoryRepository.saveAll(asList(fruits, dried, fresh, exotic, nuts)).blockLast();
 
