@@ -1,5 +1,10 @@
 package guru.springframework.spring5webfluxrest.controller;
 
+import static guru.springframework.spring5webfluxrest.controller.VendorController.BASE_URL;
+import static guru.springframework.spring5webfluxrest.domain.Vendor.builder;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+
 import guru.springframework.spring5webfluxrest.domain.Vendor;
 import guru.springframework.spring5webfluxrest.repository.VendorRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,11 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import static guru.springframework.spring5webfluxrest.controller.VendorController.BASE_URL;
-import static guru.springframework.spring5webfluxrest.domain.Vendor.builder;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 public class VendorControllerTest {
