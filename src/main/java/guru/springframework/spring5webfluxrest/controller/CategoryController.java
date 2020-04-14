@@ -5,21 +5,25 @@ import guru.springframework.spring5webfluxrest.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
+@RequestMapping(CategoryController.BASE_URL)
 @RequiredArgsConstructor
 public class CategoryController {
+    public static final String BASE_URL = "/api/v1/categories";
+
     private final CategoryRepository categoryRepository;
 
-    @GetMapping("/api/v1/categories")
+    @GetMapping()
     Flux<Category> listCategories() {
         return categoryRepository.findAll();
     }
 
-    @GetMapping("/api/v1/categories/{id}")
+    @GetMapping("{id}")
     Mono<Category> getById(@PathVariable String id) {
         return categoryRepository.findById(id);
     }
