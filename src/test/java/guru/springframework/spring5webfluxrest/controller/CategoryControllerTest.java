@@ -71,4 +71,20 @@ public class CategoryControllerTest {
                 .expectStatus()
                 .isCreated();
     }
+
+    @Test
+    void updateCategory() {
+        given(categoryRepository.save(any(Category.class)))
+                .willReturn(Mono.just(builder().build()));
+
+        Mono<Category> categoryToUpdate = Mono.just(builder().description("Some category").build());
+
+        webTestClient
+                .put()
+                .uri(BASE_URL + "/someId")
+                .body(categoryToUpdate, Category.class)
+                .exchange()
+                .expectStatus()
+                .isAccepted();
+    }
 }
