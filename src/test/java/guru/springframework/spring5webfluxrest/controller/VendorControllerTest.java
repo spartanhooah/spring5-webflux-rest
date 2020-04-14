@@ -1,5 +1,13 @@
 package guru.springframework.spring5webfluxrest.controller;
 
+import static guru.springframework.spring5webfluxrest.controller.VendorController.BASE_URL;
+import static guru.springframework.spring5webfluxrest.domain.Vendor.builder;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import guru.springframework.spring5webfluxrest.domain.Vendor;
 import guru.springframework.spring5webfluxrest.repository.VendorRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,12 +19,6 @@ import org.reactivestreams.Publisher;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import static guru.springframework.spring5webfluxrest.controller.VendorController.BASE_URL;
-import static guru.springframework.spring5webfluxrest.domain.Vendor.builder;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 public class VendorControllerTest {
@@ -73,8 +75,7 @@ public class VendorControllerTest {
 
     @Test
     void updateVendor() {
-        given(vendorRepository.save(any(Vendor.class)))
-                .willReturn(Mono.just(builder().build()));
+        given(vendorRepository.save(any(Vendor.class))).willReturn(Mono.just(builder().build()));
 
         Mono<Vendor> vendorToUpdate = Mono.just(builder().name("Some vendor").build());
 
@@ -85,5 +86,24 @@ public class VendorControllerTest {
                 .exchange()
                 .expectStatus()
                 .isAccepted();
+    }
+
+    @Test
+    void patchVendor() {
+        given(vendorRepository.save(any(Vendor.class)))
+                .willReturn(Mono.just(builder().build()));
+        given(vendorRepository.findById(anyString())).willReturn(Mono.just(builder().build()));
+
+        Mono<Vendor> vendorToUpdate = Mono.just(builder().name("Some vendor").build());
+
+        webTestClient
+                .patch()
+                .uri(BASE_URL + "/someId")
+                .body(vendorToUpdate, Vendor.class)
+                .exchange()
+                .expectStatus()
+                .isAccepted();
+
+        verify(vendorRepository, times(1)).save(any());
     }
 }

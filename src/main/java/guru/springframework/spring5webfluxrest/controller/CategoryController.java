@@ -2,10 +2,12 @@ package guru.springframework.spring5webfluxrest.controller;
 
 import guru.springframework.spring5webfluxrest.domain.Category;
 import guru.springframework.spring5webfluxrest.repository.CategoryRepository;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.reactivestreams.Publisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -46,5 +48,21 @@ public class CategoryController {
         category.setId(id);
 
         return categoryRepository.save(category);
+    }
+
+    @PatchMapping("{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    Mono<Category> patchCategory(@PathVariable String id, @RequestBody Category category) {
+        Mono<Category> foundCategory = categoryRepository.findById(id);
+
+        return foundCategory
+                .filter(found -> !Objects.equals(found.getDescription(), category.getDescription()))
+                .flatMap(
+                        f -> {
+                            f.setDescription(category.getDescription());
+
+                            return categoryRepository.save(f);
+                        })
+                .switchIfEmpty(foundCategory);
     }
 }

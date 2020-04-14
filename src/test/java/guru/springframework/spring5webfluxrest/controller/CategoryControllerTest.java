@@ -5,6 +5,8 @@ import static guru.springframework.spring5webfluxrest.domain.Category.builder;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import guru.springframework.spring5webfluxrest.domain.Category;
 import guru.springframework.spring5webfluxrest.repository.CategoryRepository;
@@ -86,5 +88,24 @@ public class CategoryControllerTest {
                 .exchange()
                 .expectStatus()
                 .isAccepted();
+    }
+
+    @Test
+    void patchCategory() {
+        given(categoryRepository.save(any(Category.class)))
+                .willReturn(Mono.just(builder().build()));
+        given(categoryRepository.findById(anyString())).willReturn(Mono.just(builder().build()));
+
+        Mono<Category> categoryToUpdate = Mono.just(builder().description("Some category").build());
+
+        webTestClient
+                .patch()
+                .uri(BASE_URL + "/someId")
+                .body(categoryToUpdate, Category.class)
+                .exchange()
+                .expectStatus()
+                .isAccepted();
+
+        verify(categoryRepository, times(1)).save(any());
     }
 }
